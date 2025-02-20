@@ -1,0 +1,101 @@
+const accessModel =require("../models/accessModel");
+
+const rateLimiting=async(req,res,next)=>{
+    const sessionId=req.session.id;
+
+
+    try{
+        const accessDb =await accessModel.findOne({sessionId:sessionId});
+
+        const diff=(Date.now()-accessDb.time)/1000;
+
+        if(diff < 5){
+            return res.send({
+                status:400,
+                message:"Too many requests, please wait for some time.",
+            })
+        }
+        await accessModel.findOneAndUpdate({sessionId},{time:Date.now()});
+        next();
+    }catch(error){
+        return res.send({
+                status:500,
+                message:"Database error, via ratelimiting",
+                error:error,
+            });
+        }
+    };
+
+    module.exports=rateLimiting;
+
+
+
+schema ---------------------------------------------------------------
+
+const mongoose =require("mongoose");
+const Schema =mongoose.Schema;
+
+const accessSchema=new Schema({
+    sessionId:{
+        type:String,
+        required:true,
+    },
+    time:{
+        type:String,
+        required:true,
+    },
+});
+ module.exports=mongoose.model("access",accessSchema);
+
+
+
+
+server file-------------------------------------------------------------
+const mongoose =require("mongoose");
+const express=require("express");
+const session=require("express-session")
+const mongoDbsession=require("connect-mongodb-session")(session);
+
+//constants
+const app=express();
+const store=new mongoDbsession({
+    uri:"mongodb+srv://yokasdenis:yokas123@cluster012.nehxw.mongodb.net/todoDb",
+    collection:"sessions",
+});
+
+//file-imports
+const rateLimiting=require("./middleware/rateLimiting")
+
+//middleware
+app.use(express.urlencoded({extended:true}));
+app.use(express.json());
+app.use(
+    session({
+        secret:"This is my secret key to database session storage",
+        resave:false,
+        saveUninitialized:false,
+        store:store,
+    })
+);
+
+
+
+//db connection
+mongoose
+    .connect("mongodb+srv://yokasdenis:yokas123@cluster012.nehxw.mongodb.net/todoDb")
+    .then(()=>{
+        console.log("MongoDb connected successfully");
+    })
+    .catch((err)=>{
+        console.log(err)
+    });
+
+
+//apis
+app.get("/",rateLimiting,(req,res)=>{
+    return res.send("login")
+})
+
+app.listen(8000,()=>{
+    console.log("server running");
+})

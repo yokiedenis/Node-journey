@@ -1,0 +1,66 @@
+//table of content
+//1.obj creation using func
+//2.obj ConstructorFunction
+//3.for inheritanceInConstructorFn 
+//4.Classes
+//5.for inheritence in classes 
+
+//1_________________obj creation using func_________________
+function createCustomer(name, branch, accountBalance) {
+  const customer = {}; // this is instance of Object
+  customer.name = name;
+  customer.branch = branch;
+  customer.accountBalance = accountBalance;
+  customer.withDraw = function (amount) { // ATM
+    customer.accountBalance -= amount;
+  };
+  return customer;
+}
+
+//NB:
+//using prototype on class will allow access to that element by any object
+//so we use a constructorfunction to provide an extra layer of access
+
+//2______________obj ConstructorFunction_______________________
+function CreateCustomer(name, branch, accountBalance) {
+  this.name = name;
+  this.branch = branch;
+  this.accountBalance = accountBalance;
+  this.addMoney = function (amount) {
+    this.accountBalance += amount;
+  };
+}
+
+
+//3._______________for inheritanceInConstructorFn we use call method in child
+function SavingsAccount(name, branch, accountBalance) {
+  BankAcc.call(this, name, branch, accountBalance);
+}
+
+//4.___________________________Classes____________________
+class BankAccount {
+  constructor(name, branch, accountBalance) {
+    this.name = name;
+    this.branch = branch;
+    this.accountBalance = accountBalance;
+  }
+  withDraw(amount) {
+    this.accountBalance -= amount;
+  }
+}
+
+//5._________for inheritence in classes we use super in child
+class SavingsAccount extends BankAccount {
+  constructor(name, branch, accountBalance) {
+    super(name, branch, accountBalance);
+  }
+  educationLoan() {
+    console.log(`you have been allocated with ${100 * accountBalance}`);
+  }
+}
+
+
+
+
+
+
