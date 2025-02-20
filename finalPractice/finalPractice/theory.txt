@@ -1,0 +1,21 @@
+API
+acciojob.com/login?key=val
+url----endpoint---query
+query has ?
+
+acciojob.com/gym/add
+------------param
+
+http status response code
+1).100-199: informational
+2).200-299:successful 
+3).300-399:redirectional
+4).400-499:client side error
+5).500-699:server side error
+
+common possible response code
+1.).400:bad request
+2.).401:unauthorized
+3.).402:payement required
+4.).403:forbidden
+5.).404:not found

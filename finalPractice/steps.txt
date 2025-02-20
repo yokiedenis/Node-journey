@@ -1,0 +1,15 @@
+//make server.js file
+//npm init
+//import express
+//require express
+//require dotenv
+//require mongoose
+//require mongoDbsession
+//declare store
+//declare session
+//connect Db middleware
+//set view engine ejs middleware
+//json express middleware
+//auth middleware
+//create schema
+//create api's
